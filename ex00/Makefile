@@ -30,8 +30,8 @@ END_COLOR	= \033[0;39m
 all: $(NAME) dependencies
 
 dependencies:
-	@curl -sSL https://raw.githubusercontent.com/ElSofian/cpp09/main/ex00/input.txt -o input.txt
-	@curl -sSL https://raw.githubusercontent.com/ElSofian/cpp09/main/ex00/data.csv -o data.csv
+	@curl -sSL https://raw.githubusercontent.com/ElSofian/cpp09_utils/main/input.txt -o input.txt
+	@curl -sSL https://raw.githubusercontent.com/ElSofian/cpp09_utils/main/data.csv -o data.csv
 
 $(NAME): $(OBJS)
 	@$(CC) $(FLAGS) $(OBJS) -o $(NAME)
