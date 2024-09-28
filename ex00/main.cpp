@@ -5,13 +5,11 @@ int	main(int ac, char **av) {
 	BitcoinExchange	exchange;
 
 	if (ac != 2) {
-		std::cerr << "Usage: ./ex00 [filename]" << std::endl;
+		std::cerr << RED << "[ERROR] " << DEFAULT << "Usage: ./btc [filename]" << std::endl;
 		return 1;
 	}
-	if (!exchange.loadFromFile(av[1])) {
-		std::cerr << "Error: could not load file" << std::endl;
+	if (!exchange.loadFromInputFile(av[1]))
 		return 1;
-	}
 	exchange.display();
 	return 0;
 

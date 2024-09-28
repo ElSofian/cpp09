@@ -8,7 +8,7 @@ RM			= rm -rf
 
 OBJS_DIR	= bin
  
-SRCS		= main.cpp
+SRCS		= BitcoinExchange.cpp main.cpp
 OBJS		= $(patsubst %.cpp, $(OBJS_DIR)/%.o, $(SRCS))
 
 # **************************************************************************** #
@@ -27,10 +27,11 @@ END_COLOR	= \033[0;39m
 # **************************************************************************** #
 # RULES
 
-all: $(NAME) dependencies
+all: $(NAME) 
 
-dependencies:
-	@curl -sSL https://raw.githubusercontent.com/ElSofian/cpp09/main/ex00/input.txt -o input.txt
+# dependencies:
+# @curl -sSL https://raw.githubusercontent.com/ElSofian/cpp09/main/ex00/input.txt -o input.txt
+# @curl -sSL https://raw.githubusercontent.com/ElSofian/cpp09/main/ex00/data.csv -o data.csv
 
 $(NAME): $(OBJS)
 	@$(CC) $(FLAGS) $(OBJS) -o $(NAME)
@@ -45,6 +46,7 @@ clean:
 	@echo "$(GREY)[Clean]$(END_COLOR) Objects have been deleted"
 
 fclean:
+# @$(RM) $(OBJS_DIR) $(NAME) a.out input.txt data.csv
 	@$(RM) $(OBJS_DIR) $(NAME) a.out
 	@echo "$(GREY)[Clean]$(END_COLOR) $(NAME) and objects have been deleted"
 
