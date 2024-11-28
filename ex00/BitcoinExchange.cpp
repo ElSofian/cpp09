@@ -12,7 +12,7 @@ BitcoinExchange::BitcoinExchange() {
 		std::size_t pos = line.find(",");
 		if (pos == std::string::npos) {
 			std::cerr << RED << "[ERROR] " << DEFAULT << "Invalid format in data file. Expected 'yyyy-mm-dd,rate'." << std::endl;
-			return;
+			continue;
 		}
 		std::string data = line.substr(0, pos);
 		std::string value = line.substr(pos + 1);
@@ -56,8 +56,8 @@ bool	BitcoinExchange::loadFromInputFile(const std::string &filename) {
 	}
 	i = 0;
 	while (std::getline(file, line)) {
-		if (!checkInputFile(line, i))
-			return false;
+		if (!checkInputFile(line, i)) continue;
+		else display(line);
 		i++;
 	}
 	_filename = filename;
@@ -74,7 +74,7 @@ bool isValidDate(const std::string &date) {
 	int month = (numbers[4] - '0') * 10 + (numbers[5] - '0');
 	int day = (numbers[6] - '0') * 10 + (numbers[7] - '0');
 
-	if (month < 1 || month > 12)
+	if (month < 1 || month > 12 || year < 2009 || year > 2024)
 		return false;
 
 	int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -96,13 +96,13 @@ bool isValidFloat(const std::string &value, float &rate) {
 
 bool	BitcoinExchange::checkInputFile(std::string line, int i) {
 	if (i == 0 && line != "date | value") {
-		std::cerr << RED << "[ERROR] " << DEFAULT << "The file should start by \"date | value\" line." << std::endl;
+		std::cerr << "Error: The file should start by \"date | value\" line." << std::endl;
 		return false;
 	}
 	if (i > 0) {
 		std::size_t pos = line.find(" | ");
 		if (pos == std::string::npos) {
-			std::cerr << RED << "[ERROR] " << DEFAULT << "Invalid format. Expected 'yyyy-mm-dd | value'." << std::endl;
+			std::cerr << "Error: Invalid format. Expected 'yyyy-mm-dd | value'." << std::endl;
 			return false;
 		}
 
@@ -110,18 +110,18 @@ bool	BitcoinExchange::checkInputFile(std::string line, int i) {
 		std::string value = line.substr(pos + 3);
 
 		if (!isValidDate(date)) {
-			std::cerr << RED << "[ERROR] " << DEFAULT << "Invalid date format. Expected 'yyyy-mm-dd'." << std::endl;
+			std::cerr << "Error: Invalid date or date format. Expected 'yyyy-mm-dd'." << std::endl;
 			return false;
 		}
 
 		float rate;
 		if (!isValidFloat(value, rate)) {
-			std::cerr << RED << "[ERROR] " << DEFAULT << "Invalid value format. Expected a float." << std::endl;
+			std::cerr << "Error: Invalid value format. Expected a float." << std::endl;
 			return false;
 		}
 
 		if (rate < 0 || rate > 1000) {
-			std::cerr << RED << "[ERROR] " << DEFAULT << "Value out of range. Expected between 0 and 1000." << std::endl;
+			std::cerr << "Error: Value out of range. Expected between 0 and 1000." << std::endl;
 			return false;
 		}
 	}
@@ -138,25 +138,20 @@ float BitcoinExchange::getValue(std::string date, float rate) const {
     return rate * it->second;
 }
 
-void	BitcoinExchange::display() const {
-	std::ifstream	file(_filename.c_str());
-	std::string		line;
+void	BitcoinExchange::display(std::string line) const {
+	if (line == "date | value")
+		return;
+	std::size_t pos = line.find(" | ");
+	if (pos == std::string::npos)
+		return;
+	std::string date = line.substr(0, pos);
+	std::string value = line.substr(pos + 3);
 
-	while (std::getline(file, line)) {
-		if (line == "date | value")
-			continue;
-		std::size_t pos = line.find(" | ");
-		if (pos == std::string::npos)
-			continue;
-		std::string date = line.substr(0, pos);
-		std::string value = line.substr(pos + 3);
+	float rate;
+	std::istringstream iss(value);
+	iss >> std::noskipws >> rate;
 
-		float rate;
-		std::istringstream iss(value);
-		iss >> std::noskipws >> rate;
-
-		std::cout << date << " => " << rate << " = " << getValue(date, rate) << std::endl;
-	}
+	std::cout << date << " => " << rate << " = " << getValue(date, rate) << std::endl;
 }
 
 void	BitcoinExchange::getData(std::map<std::string, float> &data) const {

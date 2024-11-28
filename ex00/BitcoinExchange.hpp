@@ -24,7 +24,7 @@ class BitcoinExchange {
 		bool	loadFromInputFile(const std::string &filename);
 		bool	checkInputFile(std::string line, int i);
 		float	getValue(std::string date, float rate) const;
-		void	display() const;
+		void	display(std::string line) const;
 
 		void	getData(std::map<std::string, float> &data) const;
 };

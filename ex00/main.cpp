@@ -10,7 +10,6 @@ int	main(int ac, char **av) {
 	}
 	if (!exchange.loadFromInputFile(av[1]))
 		return 1;
-	exchange.display();
 	return 0;
 
 }
