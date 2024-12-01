@@ -6,7 +6,7 @@
 #include <deque>
 
 #define RED "\033[1;31m"
-#define CLEAR "\033[1;37m"
+#define DEFAULT "\033[1;37m"
 
 template <typename T, typename Container>
 void print(Container &sequence, const std::string &str)
@@ -29,7 +29,7 @@ Container check(int ac, char **av)
 
     if (ac < 2)
     {
-        std::cout << RED << "[Error] " << CLEAR << "No sequence provided." << std::endl;
+        std::cout << RED << "[Error] " << DEFAULT << "No sequence provided." << std::endl;
         exit(1);
     }
     for (int i = 1; i < ac; ++i)
@@ -38,17 +38,28 @@ Container check(int ac, char **av)
 
         for (size_t j = 0; j < arg.length(); ++j)
         {
-            if (!std::isdigit(arg[j]) && arg[j] != '-')
+            if ((!std::isdigit(arg[j]) && arg[j] != '-') || 
+                (arg[j] == '-' && (j != 0 || arg.length() == 1)))
             {
-                std::cout << RED << "[Error] " << CLEAR << "Invalid argument '" << av[i] << "'." << std::endl;
+                std::cout << RED << "[Error] " << DEFAULT << "Invalid argument '" << av[i] << "'." << std::endl;
                 sequence.clear();
                 exit(1);
             }
         }
-        sequence.push_back(std::atoi(av[i]));
+
+        int num = std::atoi(av[i]);
+        if (num < 0)
+        {
+            std::cout << RED << "[Error] " << DEFAULT << "Negative numbers are not allowed: '" << av[i] << "'." << std::endl;
+            sequence.clear();
+            exit(1);
+        }
+
+        sequence.push_back(num);
     }
     return sequence;
 }
+
 
 template <typename T, typename Container>
 void sort(Container &sequence)
