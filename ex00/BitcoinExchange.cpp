@@ -12,7 +12,7 @@ BitcoinExchange::BitcoinExchange() {
 		std::size_t pos = line.find(",");
 		if (pos == std::string::npos) {
 			std::cerr << RED << "[ERROR] " << DEFAULT << "Invalid format in data file. Expected 'yyyy-mm-dd,rate'." << std::endl;
-			continue;
+			return;
 		}
 		std::string data = line.substr(0, pos);
 		std::string value = line.substr(pos + 1);
@@ -74,7 +74,7 @@ bool isValidDate(const std::string &date) {
 	int month = (numbers[4] - '0') * 10 + (numbers[5] - '0');
 	int day = (numbers[6] - '0') * 10 + (numbers[7] - '0');
 
-	if (month < 1 || month > 12 || year < 2009 || year > 2024)
+	if (month < 1 || month > 12 || year < 2009)
 		return false;
 
 	int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
