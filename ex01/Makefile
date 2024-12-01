@@ -1,7 +1,7 @@
 # **************************************************************************** #
 # VARIABLES
 
-NAME		= rpn
+NAME		= RPN
 CC			= c++
 FLAGS		= -Wall -Wextra -Werror -I. -std=c++98 -g3
 RM			= rm -rf

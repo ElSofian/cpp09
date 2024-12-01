@@ -11,7 +11,10 @@ int	main(int ac, char **av) {
 	int	result;
 
 	if (rpn.check(av[1]) == -1)
+	{
+		std::cerr << RED << "[ERROR]" << DEFAULT << " Invalid expression." << std::endl;
 		return 1;
+	}
 
 	result = rpn.parse(av[1]);
 	if (result == -1)
